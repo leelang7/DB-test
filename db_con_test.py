@@ -1,21 +1,19 @@
-import pymysql
+from sqlalchemy import create_engine
 import pandas as pd
 
 def getdata_from_db(query):
     # 데이터베이스 연결
     try:
-        with pymysql.connect(host='localhost', user='root', password='1436', 
-                             db='test', charset='utf8') as con:
-            # SQL 쿼리를 실행하고 DataFrame으로 가져오기
-            df = pd.read_sql(query, con)
-            return df
+        engine = create_engine('mysql+pymysql://root:1436@localhost/test')
+        df = pd.read_sql(query, engine)
+        return df
         
     except Exception as e:
         print("An error occurred while getting data:", e)
         return None
 
 def main():
-    query = 'SELECT * FROM test.member'
+    query = 'SELECT * FROM test.patient'
     df = getdata_from_db(query)
     
     if df is not None:
